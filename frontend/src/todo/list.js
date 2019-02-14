@@ -1,9 +1,9 @@
 import React, {Fragment} from 'react';
+import {connect} from 'react-redux';
 
 import IconButton from '../template/iconButton';
 
-export default props => {
-
+const TodoList = props => {
     const rows = () => {
         const todos = props.todos || [];
 
@@ -57,3 +57,7 @@ export default props => {
         </Fragment>
     );
 };
+
+const mapStateToProps = (state) => ({todos: state.todo.todos});
+
+export default connect(mapStateToProps)(TodoList);

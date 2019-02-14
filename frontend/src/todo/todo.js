@@ -39,9 +39,9 @@ class Todo extends Component {
         await this.loadTodos();
     }
 
-    onSearch = async () => {
-        await this.loadTodos(this.state.description);
-    }
+    // onSearch = async () => {
+    //     await this.loadTodos(this.state.description);
+    // }
 
     onSearchClear = async () => {
         await this.loadTodos();
@@ -78,7 +78,7 @@ class Todo extends Component {
 
                 <Form description={this.state.description}
                       onAdd={this.onAdd}
-                      onSearch={this.onSearch}
+                      // onSearch={this.onSearch}
                       onSearchClear={this.onSearchClear}
                       onInputChange={this.onInputChange}
                 />
