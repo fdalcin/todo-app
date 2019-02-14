@@ -9,14 +9,14 @@ class Grid extends Component {
         if (this.props.md) classes.push(`col-md-${this.props.md}`);
         if (this.props.lg) classes.push(`col-lg-${this.props.lg}`);
 
-        return classes.length ? classes.join(' ') : 'col';
+        return classes.join(' ');
     }
 
     render() {
         const classes = this.toBootstrapClasses();
 
         return (
-            <div className={`my-1 ${classes}`}>
+            <div className={`my-1 ${classes} ${this.props.additionalClasses}`}>
                 {this.props.children}
             </div>
         );
