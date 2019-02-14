@@ -1,13 +1,22 @@
-import React, {Fragment} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import IconButton from '../template/iconButton';
 
-const TodoList = props => {
-    const rows = () => {
-        const todos = props.todos || [];
+import {loadTodos, markAsDone, markAsPending, remove} from './actions';
 
-        const {onMarkAsDone, onMarkAsPending, onRemove} = props;
+class TodoList extends Component {
+    componentDidMount() {
+        const {loadTodos} = this.props;
+
+        loadTodos();
+    }
+
+    renderRows = () => {
+        const todos = this.props.todos || [];
+
+        const {markAsDone, markAsPending, remove} = this.props;
 
         return todos.map((todo) => {
             let todoClass = 'align-middle';
@@ -21,19 +30,19 @@ const TodoList = props => {
                         <IconButton color='success'
                                     variant='sm'
                                     icon='check'
-                                    onClick={() => onMarkAsDone(todo)}
+                                    onClick={() => markAsDone(todo)}
                                     hidden={todo.done}
                         />
                         <IconButton color='warning'
                                     variant='sm'
                                     icon='undo'
-                                    onClick={() => onMarkAsPending(todo)}
+                                    onClick={() => markAsPending(todo)}
                                     hidden={!todo.done}
                         />
                         <IconButton color='danger'
                                     variant='sm'
                                     icon='trash-o'
-                                    onClick={() => onRemove(todo)}
+                                    onClick={() => remove(todo)}
                         />
                     </td>
                 </tr>
@@ -41,23 +50,27 @@ const TodoList = props => {
         });
     }
 
-    return (
-        <Fragment>
-            <table className='table table-hover table-striped table-borderless mt-4'>
-                <thead>
-                    <tr>
-                        <th>Descrição</th>
-                        <th className='text-right'>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows()}
-                </tbody>
-            </table>
-        </Fragment>
-    );
+    render() {
+        return (
+            <Fragment>
+                <table className='table table-hover table-striped table-borderless mt-4'>
+                    <thead>
+                        <tr>
+                            <th>Descrição</th>
+                            <th className='text-right'>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.renderRows()}
+                    </tbody>
+                </table>
+            </Fragment>
+        );
+    }
 };
 
 const mapStateToProps = (state) => ({todos: state.todo.todos});
 
-export default connect(mapStateToProps)(TodoList);
+const mapDispatchToProps = (dispatch) => bindActionCreators({loadTodos, markAsDone, markAsPending, remove}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList);

@@ -5,31 +5,27 @@ import {bindActionCreators} from 'redux';
 import Grid from '../template/grid';
 import IconButton from '../template/iconButton';
 
-import {addTodo, onDescriptionChange, loadTodos} from './actions';
+import {add, clear, descriptionChanged, loadTodos} from './actions';
 
 const ENTER = 13;
 const DELETE = 46;
 
 class TodoForm extends Component {
-    componentDidMount() {
-        this.props.loadTodos();
-    }
-
     onKeyUp = (e) => {
-        const {addTodo, loadTodos, description} = this.props;
+        const {add, clear, loadTodos, description} = this.props;
 
         if (e.keyCode === ENTER) {
-            return e.ctrlKey ? loadTodos() : addTodo(description);
+            return e.ctrlKey ? loadTodos() : add(description);
         }
 
         if (e.keyCode === DELETE) {
-            return e.ctrlKey ? this.props.onSearchClear() : null;
+            return e.ctrlKey ? clear() : null;
         }
     }
 
     render() {
-        const {addTodo, loadTodos, description} = this.props;
-        const props = this.props;
+        const {add, clear, description, descriptionChanged, loadTodos} = this.props;
+
         return (
             <Fragment>
                 <div className='row'>
@@ -39,20 +35,18 @@ class TodoForm extends Component {
                             className='form-control'
                             placeholder='Adicione uma tarefa'
                             value={description}
-                            onChange={props.onDescriptionChange}
+                            onChange={descriptionChanged}
                             onKeyUp={this.onKeyUp}
                         />
                         <small className='form-text text-muted'>
-                            Hit <kbd>Enter</kbd> to add /
-                            <kbd>Ctrl + Enter</kbd> to search /
-                            <kbd>Ctrl + Delete</kbd> to clear the search.
+                            Hit <kbd>Enter</kbd> to add / <kbd>Ctrl + Enter</kbd> to search / <kbd>Ctrl + Delete</kbd> to clear the search.
                         </small>
                     </Grid>
 
                     <Grid xs={12} sm={4} md={3} additionalClasses='text-right'>
-                        <IconButton color='primary' variant='sm' icon='plus' onClick={() => addTodo(description)}/>
-                        <IconButton color='secondary' variant='sm' icon='search' onClick={() => loadTodos()}/>
-                        <IconButton color='light' variant='sm' icon='eraser' onClick={props.onSearchClear}/>
+                        <IconButton color='primary' variant='sm' icon='plus' onClick={() => add(description)}/>
+                        <IconButton color='secondary' variant='sm' icon='search' onClick={loadTodos}/>
+                        <IconButton color='light' variant='sm' icon='eraser' onClick={clear}/>
                     </Grid>
                 </div>
             </Fragment>
@@ -62,6 +56,6 @@ class TodoForm extends Component {
 
 const mapStateToProps = (state) => ({description: state.todo.description});
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({addTodo, onDescriptionChange, loadTodos}, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({add, clear, descriptionChanged, loadTodos}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoForm);
